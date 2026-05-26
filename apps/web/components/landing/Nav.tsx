@@ -31,7 +31,7 @@ export function Nav() {
         className={[
           "nav-anim-drop pointer-events-auto relative flex w-full items-center justify-between",
           "transition-[max-width,padding,background-color,border-color,box-shadow,backdrop-filter]",
-          "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+          "duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
           "rounded-full border",
           scrolled
             ? "max-w-[760px] border-line bg-paper/70 px-3 py-2 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.55)] backdrop-blur-md"
@@ -48,7 +48,7 @@ export function Nav() {
             aria-hidden
             className={[
               "grid place-items-center rounded-full border bg-paper text-ink",
-              "transition-[height,width,border-color] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "transition-[height,width,border-color] duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]",
               scrolled ? "h-7 w-7 border-line" : "h-9 w-9 border-line",
             ].join(" ")}
           >
@@ -56,7 +56,7 @@ export function Nav() {
           </span>
           <span
             className={[
-              "font-display leading-none tracking-tight transition-[font-size] duration-[600ms]",
+              "font-display leading-none tracking-tight transition-[font-size] duration-600",
               scrolled ? "text-[1.05rem]" : "text-[1.25rem]",
             ].join(" ")}
           >
@@ -86,12 +86,16 @@ export function Nav() {
           style={{ ["--d" as string]: "440ms" }}
           className={[
             "btn btn-primary nav-anim-pop",
-            "transition-[padding,font-size] duration-[600ms]",
-            scrolled ? "px-4 py-2 text-[0.82rem]" : "px-5 py-2.5 text-[0.88rem]",
+            "transition-[padding,font-size] duration-600",
+            scrolled
+              ? "px-4 py-2 text-[0.82rem]"
+              : "px-5 py-2.5 text-[0.88rem]",
           ].join(" ")}
         >
           <span>Get access</span>
-          <span aria-hidden className="arrow">→</span>
+          <span aria-hidden className="arrow">
+            →
+          </span>
         </Link>
       </nav>
     </header>

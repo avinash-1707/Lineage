@@ -5,6 +5,8 @@ type Feature = {
   title: string;
   body: string;
   visual: "memory" | "severity" | "stream" | "loop" | "context" | "git";
+  span: string;
+  size: "sm" | "md" | "lg";
 };
 
 const features: Feature[] = [
@@ -12,15 +14,19 @@ const features: Feature[] = [
     k: "01",
     title: "Memory that scopes itself.",
     body:
-      "Each repository keeps its own library of precedent. Frontend conventions stay with the frontend. Service conventions stay with services.",
+      "Each repository keeps its own library of precedent. Frontend conventions stay with the frontend, services with services.",
     visual: "memory",
+    span: "sm:col-span-2 lg:col-span-3",
+    size: "md",
   },
   {
     k: "02",
     title: "Severity, ranked the way you would.",
     body:
-      "Every comment carries a tier. Style suggestions stay quiet. Real bugs surface first. The ladder follows your past triage.",
+      "Every comment carries a tier. Style stays quiet, real bugs surface first, following your past triage.",
     visual: "severity",
+    span: "sm:col-span-2 lg:col-span-3",
+    size: "md",
   },
   {
     k: "03",
@@ -28,6 +34,8 @@ const features: Feature[] = [
     body:
       "Comments appear inline the moment they are formed. No waiting for a full review to finish before you can act on the early signal.",
     visual: "stream",
+    span: "sm:col-span-2 lg:col-span-4",
+    size: "lg",
   },
   {
     k: "04",
@@ -35,6 +43,8 @@ const features: Feature[] = [
     body:
       "Accept, dismiss, or rewrite a comment. Lineage adjusts the weight of similar comments next time without asking you to maintain rules.",
     visual: "loop",
+    span: "sm:col-span-2 lg:col-span-4",
+    size: "lg",
   },
   {
     k: "05",
@@ -42,13 +52,17 @@ const features: Feature[] = [
     body:
       "Lineage references the files around your change so suggestions sit inside the architecture, not on top of it.",
     visual: "context",
+    span: "sm:col-span-1 lg:col-span-2",
+    size: "sm",
   },
   {
     k: "06",
     title: "Native to your workflow.",
     body:
-      "Lives inside GitHub. Posts as a review, threads with your teammates, and respects the way your team already merges code.",
+      "Lives inside GitHub. Posts as a review and threads with your teammates.",
     visual: "git",
+    span: "sm:col-span-1 lg:col-span-2",
+    size: "sm",
   },
 ];
 
@@ -68,9 +82,14 @@ export function Features() {
         </h2>
       </Reveal>
 
-      <ul className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6 lg:[grid-auto-flow:dense]">
         {features.map((f, i) => (
-          <Reveal key={f.k} as="li" delay={(i % 3) * 90}>
+          <Reveal
+            key={f.k}
+            as="li"
+            delay={(i % 3) * 90}
+            className={f.span}
+          >
             <FeatureCard f={f} />
           </Reveal>
         ))}
@@ -80,25 +99,40 @@ export function Features() {
 }
 
 function FeatureCard({ f }: { f: Feature }) {
+  const titleScale =
+    f.size === "lg"
+      ? "text-[1.65rem] md:text-[1.85rem] leading-[1.08]"
+      : f.size === "md"
+      ? "text-[1.4rem] leading-[1.12]"
+      : "text-[1.25rem] leading-[1.18]";
+  const padding = f.size === "lg" ? "p-7 md:p-8" : "p-6 md:p-7";
+  const bodyWidth =
+    f.size === "lg" ? "max-w-[58ch]" : f.size === "md" ? "max-w-[44ch]" : "";
+
   return (
-    <article className="lift relative flex h-full flex-col gap-5 rounded-[18px] border border-line bg-paper/60 p-6 md:p-7">
+    <article
+      className={`lift relative flex h-full flex-col gap-5 rounded-[18px] border border-line bg-paper/60 ${padding}`}
+    >
       <div className="flex items-start justify-between">
         <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-2">
           {f.k}
         </span>
-        <Visual kind={f.visual} />
+        <Visual kind={f.visual} size={f.size} />
       </div>
 
-      <h3 className="font-display text-[1.4rem] leading-[1.15] tracking-tight">
+      <h3 className={`font-display tracking-tight ${titleScale}`}>
         {f.title}
       </h3>
-      <p className="text-[0.95rem] leading-[1.55] text-ink-soft">{f.body}</p>
+      <p className={`text-[0.95rem] leading-[1.55] text-ink-soft ${bodyWidth}`}>
+        {f.body}
+      </p>
     </article>
   );
 }
 
-function Visual({ kind }: { kind: Feature["visual"] }) {
-  const common = "h-12 w-20 text-ink-soft";
+function Visual({ kind, size }: { kind: Feature["visual"]; size: Feature["size"] }) {
+  const scale = size === "lg" ? "h-16 w-28" : size === "md" ? "h-14 w-24" : "h-12 w-20";
+  const common = `${scale} text-ink-soft`;
   switch (kind) {
     case "memory":
       return (

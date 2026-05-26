@@ -59,7 +59,7 @@ export function Process() {
             key={s.num}
             as="li"
             delay={i * 120}
-            className="relative flex flex-col gap-5 bg-bg pt-12 md:pt-0"
+            className="lift relative flex flex-col gap-5 rounded-2xl border border-line bg-paper p-7 md:p-8"
           >
             <div className="flex items-center justify-between">
               <span className="font-display text-[1.6rem] italic text-accent">

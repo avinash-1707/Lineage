@@ -6,18 +6,22 @@ import { Marquee } from "@/components/landing/Marquee";
 import { Nav } from "@/components/landing/Nav";
 import { Preview } from "@/components/landing/Preview";
 import { Process } from "@/components/landing/Process";
+import { SideGrid } from "@/components/landing/SideGrid";
 
 export default function Home() {
   return (
     <main className="relative z-10 isolate flex min-h-screen flex-col">
       <Nav />
       <Hero />
-      <Marquee />
-      <Process />
-      <Features />
-      <Preview />
-      <Cta />
-      <Footer />
+      <div className="relative isolate">
+        <SideGrid />
+        <Marquee />
+        <Process />
+        <Features />
+        <Preview />
+        <Cta />
+        <Footer />
+      </div>
     </main>
   );
 }
