@@ -1,0 +1,22 @@
+services:
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+      target: builder
+    command: ["pnpm", "dev"]
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+    volumes:
+      - ../apps/web:/app
+      - /app/node_modules
+      - /app/.next
+
+  api:
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    environment:
+      LOG_LEVEL: debug
+    volumes:
+      - ../apps/api/src:/app/src
+      - ../apps/api/alembic:/app/alembic
