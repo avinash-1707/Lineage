@@ -27,8 +27,9 @@ export function Nav() {
     >
       <nav
         data-floating={scrolled ? "true" : "false"}
+        style={{ ["--d" as string]: "0ms" }}
         className={[
-          "pointer-events-auto relative flex w-full items-center justify-between",
+          "nav-anim-drop pointer-events-auto relative flex w-full items-center justify-between",
           "transition-[max-width,padding,background-color,border-color,box-shadow,backdrop-filter]",
           "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
           "rounded-full border",
@@ -40,7 +41,8 @@ export function Nav() {
         <Link
           href="/"
           aria-label="Lineage home"
-          className="group flex items-center gap-2 pl-2"
+          style={{ ["--d" as string]: "180ms" }}
+          className="nav-anim-drop group flex items-center gap-2 pl-2"
         >
           <span
             aria-hidden
@@ -63,8 +65,12 @@ export function Nav() {
         </Link>
 
         <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 md:flex">
-          {links.map((l) => (
-            <li key={l.href}>
+          {links.map((l, i) => (
+            <li
+              key={l.href}
+              style={{ ["--d" as string]: `${260 + i * 60}ms` }}
+              className="nav-anim-drop"
+            >
               <Link
                 href={l.href}
                 className="text-[0.86rem] text-muted transition-colors hover:text-ink"
@@ -77,8 +83,9 @@ export function Nav() {
 
         <Link
           href="#cta"
+          style={{ ["--d" as string]: "440ms" }}
           className={[
-            "btn btn-primary",
+            "btn btn-primary nav-anim-pop",
             "transition-[padding,font-size] duration-[600ms]",
             scrolled ? "px-4 py-2 text-[0.82rem]" : "px-5 py-2.5 text-[0.88rem]",
           ].join(" ")}

@@ -9,7 +9,7 @@ import { Process } from "@/components/landing/Process";
 
 export default function Home() {
   return (
-    <main className="relative isolate flex min-h-screen flex-col">
+    <main className="relative z-10 isolate flex min-h-screen flex-col">
       <Nav />
       <Hero />
       <Marquee />

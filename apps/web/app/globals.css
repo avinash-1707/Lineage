@@ -214,6 +214,23 @@ html.lenis, html.lenis body { height: auto; }
   50%  { opacity: 1; }
   100% { stroke-dashoffset: -120; opacity: 0.3; }
 }
+@keyframes nav-drop {
+  from { opacity: 0; transform: translateY(-10px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0);     filter: blur(0); }
+}
+@keyframes nav-pop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.nav-anim-drop {
+  animation: nav-drop 560ms var(--ease-out-soft) backwards;
+  animation-delay: var(--d, 0ms);
+}
+.nav-anim-pop {
+  animation: nav-pop 520ms var(--ease-out-soft) backwards;
+  animation-delay: var(--d, 0ms);
+}
 
 .reveal {
   opacity: 0;
