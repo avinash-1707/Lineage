@@ -37,9 +37,11 @@ async def overview(db: AsyncSession = Depends(get_session)) -> Overview:
         ).all()
     )
 
-    from src.models.repository import Repository as Repo
+    from src.models.auth import Repository as Repo
 
-    total_repos = (await db.execute(select(func.count(Repo.id)))).scalar_one()
+    total_repos = (
+        await db.execute(select(func.count(Repo.id)).where(Repo.deleted_at.is_(None)))
+    ).scalar_one()
 
     return Overview(
         total_repositories=int(total_repos or 0),

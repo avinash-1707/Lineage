@@ -1,9 +1,15 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, Request, status
+import json
+
+from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Request, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import get_settings
+from src.database import get_session
 from src.observability.logging import get_logger
+from src.schemas.auth import InstallationEventPayload
+from src.services import auth_service
 from src.webhooks.schemas import PullRequestEvent, ReviewCommentEvent
 from src.webhooks.signature import verify_signature
 from src.workers.tasks.review import enqueue_review
@@ -58,3 +64,43 @@ async def github_webhook(
         return {"status": "queued", "event": x_github_event}
 
     return {"status": "ignored", "event": x_github_event}
+
+
+@router.post("/github/app", status_code=status.HTTP_202_ACCEPTED)
+async def github_app_webhook(
+    request: Request,
+    x_github_event: str = Header(..., alias="X-GitHub-Event"),
+    x_hub_signature_256: str | None = Header(None, alias="X-Hub-Signature-256"),
+    x_github_delivery: str | None = Header(None, alias="X-GitHub-Delivery"),
+    db: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
+    settings = get_settings()
+    body = await request.body()
+
+    if not verify_signature(
+        body, x_hub_signature_256, settings.github_webhook_secret.get_secret_value()
+    ):
+        log.warning("webhook.app_signature_invalid", delivery=x_github_delivery)
+        raise HTTPException(status_code=401, detail="invalid signature")
+
+    if x_github_event != "installation":
+        log.info(
+            "webhook.app_event_ignored", event=x_github_event, delivery=x_github_delivery
+        )
+        return {"status": "ignored", "event": x_github_event}
+
+    try:
+        raw = json.loads(body)
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=400, detail="invalid json body") from exc
+
+    payload = InstallationEventPayload.model_validate(raw)
+    log.info(
+        "webhook.installation_event",
+        action=payload.action,
+        installation_id=payload.installation.id,
+        delivery=x_github_delivery,
+    )
+    await auth_service.handle_installation_event(db, payload)
+    await db.commit()
+    return {"status": "processed", "action": payload.action}

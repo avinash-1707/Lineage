@@ -13,7 +13,7 @@ export function Cta() {
           {/* decorative serif glyph */}
           <span
             aria-hidden
-            className="pointer-events-none absolute right-[-2rem] top-[-3rem] font-display text-[18rem] italic leading-none text-contrast-fg/[0.05] md:text-[26rem]"
+            className="pointer-events-none absolute -right-8 -top-12 font-display text-[18rem] italic leading-none text-contrast-fg/5 md:text-[26rem]"
           >
             L
           </span>
@@ -25,7 +25,9 @@ export function Cta() {
           <h2 className="mt-6 max-w-[18ch] font-display text-[clamp(2.4rem,6vw,5rem)] leading-[0.98] tracking-[-0.03em]">
             Let the next review
             <br />
-            <span className="italic text-highlight">remember the last one.</span>
+            <span className="italic text-highlight">
+              remember the last one.
+            </span>
           </h2>
 
           <p className="mt-8 max-w-[52ch] text-[1.05rem] leading-[1.55] text-contrast-fg/75">
@@ -50,14 +52,16 @@ export function Cta() {
               autoComplete="email"
               required
               placeholder="you@team.dev"
-              className="flex-1 rounded-full border border-contrast-fg/15 bg-contrast-fg/[0.04] px-5 py-3 text-[0.95rem] text-contrast-fg placeholder:text-contrast-fg/40 outline-none transition-colors duration-300 focus:border-contrast-fg/40 focus:bg-contrast-fg/10"
+              className="flex-1 rounded-full border border-contrast-fg/15 bg-contrast-fg/4 px-5 py-3 text-[0.95rem] text-contrast-fg placeholder:text-contrast-fg/40 outline-none transition-colors duration-300 focus:border-contrast-fg/40 focus:bg-contrast-fg/10"
             />
             <button
               type="submit"
               className="btn rounded-full bg-ink px-5 py-3 text-[0.92rem] font-medium text-contrast-bg hover:bg-highlight"
             >
               Request access
-              <span aria-hidden className="arrow">→</span>
+              <span aria-hidden className="arrow">
+                →
+              </span>
             </button>
           </form>
 

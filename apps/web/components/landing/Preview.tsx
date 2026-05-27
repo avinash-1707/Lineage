@@ -11,7 +11,7 @@ export function Preview() {
           <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-2">
             Chapter three
           </span>
-          <h2 className="mt-4 font-display text-[clamp(2.2rem,5vw,4rem)] leading-[1] tracking-[-0.03em]">
+          <h2 className="mt-4 font-display text-[clamp(2.2rem,5vw,4rem)] leading-none tracking-[-0.03em]">
             A review,
             <br />
             <span className="italic text-accent">arriving as it thinks.</span>
@@ -77,11 +77,23 @@ function PRMock() {
               app/services/billing.py
             </div>
             <div className="grid grid-cols-[44px_1fr] gap-x-2 px-4 py-3 font-mono text-[12.5px] leading-[1.7]">
-              <DiffLine n="38"  v="def charge(user, amount):" tone="neutral" />
-              <DiffLine n="39"  v={"    if not user.active:"} tone="neutral" />
-              <DiffLine n=""    v="        raise ValueError('inactive user')" tone="remove" />
-              <DiffLine n="40"  v="        raise InactiveUserError('inactive user')" tone="add" />
-              <DiffLine n="41"  v={"    return gateway.charge(user.id, amount)"} tone="neutral" />
+              <DiffLine n="38" v="def charge(user, amount):" tone="neutral" />
+              <DiffLine n="39" v={"    if not user.active:"} tone="neutral" />
+              <DiffLine
+                n=""
+                v="        raise ValueError('inactive user')"
+                tone="remove"
+              />
+              <DiffLine
+                n="40"
+                v="        raise InactiveUserError('inactive user')"
+                tone="add"
+              />
+              <DiffLine
+                n="41"
+                v={"    return gateway.charge(user.id, amount)"}
+                tone="neutral"
+              />
             </div>
           </div>
 
@@ -93,11 +105,15 @@ function PRMock() {
               line={40}
               body={
                 <>
-                  <span className="font-mono text-[12px] text-muted-2">[similar to pull/198, accepted]</span>{" "}
+                  <span className="font-mono text-[12px] text-muted-2">
+                    [similar to pull/198, accepted]
+                  </span>{" "}
                   This call now raises a typed exception, which is good. The
-                  surrounding handlers in <code className="font-mono text-ink">app/api/billing.py</code> still
-                  catch the old <code className="font-mono text-ink">ValueError</code>. Likely worth updating
-                  the catch sites in the same change.
+                  surrounding handlers in{" "}
+                  <code className="font-mono text-ink">app/api/billing.py</code>{" "}
+                  still catch the old{" "}
+                  <code className="font-mono text-ink">ValueError</code>. Likely
+                  worth updating the catch sites in the same change.
                 </>
               }
               streaming
@@ -111,8 +127,11 @@ function PRMock() {
                   Naming nit, recorded as team preference. Internal call sites
                   on <code className="font-mono text-ink">gateway</code> use
                   keyword arguments elsewhere. Consider{" "}
-                  <code className="font-mono text-ink">gateway.charge(user_id=user.id, amount=amount)</code> for
-                  consistency with <code className="font-mono text-ink">PaymentService</code>.
+                  <code className="font-mono text-ink">
+                    gateway.charge(user_id=user.id, amount=amount)
+                  </code>{" "}
+                  for consistency with{" "}
+                  <code className="font-mono text-ink">PaymentService</code>.
                 </>
               }
             />
@@ -158,18 +177,20 @@ function DiffLine({
     tone === "add"
       ? "text-sage"
       : tone === "remove"
-      ? "text-accent"
-      : "text-ink-soft";
+        ? "text-accent"
+        : "text-ink-soft";
   const bg =
     tone === "add"
       ? "bg-sage/[0.08]"
       : tone === "remove"
-      ? "bg-accent/[0.07]"
-      : "";
+        ? "bg-accent/[0.07]"
+        : "";
   const sym = tone === "add" ? "+" : tone === "remove" ? "−" : " ";
   return (
     <>
-      <span className="select-none text-right text-[11px] text-muted-2">{n}</span>
+      <span className="select-none text-right text-[11px] text-muted-2">
+        {n}
+      </span>
       <span className={`flex items-center gap-2 rounded px-1 ${bg} ${cls}`}>
         <span className="w-3 text-muted-2">{sym}</span>
         <span className="truncate">{v}</span>

@@ -1,15 +1,17 @@
 from __future__ import annotations
 
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
 
 if TYPE_CHECKING:
-    from src.models.repository import Repository
+    from src.models.auth import Repository
     from src.models.review_comment import ReviewComment
 
 
@@ -17,8 +19,10 @@ class PullRequest(Base):
     __tablename__ = "pull_requests"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    repository_id: Mapped[int] = mapped_column(
-        ForeignKey("repositories.id", ondelete="CASCADE"), index=True
+    repository_id: Mapped[uuid.UUID] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("repositories.id", ondelete="CASCADE"),
+        index=True,
     )
     number: Mapped[int] = mapped_column(Integer, index=True)
     title: Mapped[str] = mapped_column(String(512))

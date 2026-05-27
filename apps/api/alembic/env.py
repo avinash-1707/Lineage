@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from src.config import get_settings
 from src.database import Base
-from src.models import repository, pull_request, review_comment  # noqa: F401
+from src.models import auth, pull_request, review_comment  # noqa: F401
 
 config = context.config
 

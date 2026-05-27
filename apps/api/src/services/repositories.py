@@ -6,36 +6,48 @@ layer so that callers never construct ORM rows directly.
 
 from __future__ import annotations
 
+import uuid
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.models.auth import Repository
 from src.models.pull_request import PullRequest
-from src.models.repository import Repository
 
 
 async def upsert_repository(
     db: AsyncSession,
     *,
-    github_id: int,
+    github_repo_id: int,
+    owner: str,
+    name: str,
     full_name: str,
-    default_branch: str | None,
-    installation_id: int | None = None,
+    default_branch: str | None = None,
+    private: bool = False,
+    installation_id: uuid.UUID | None = None,
 ) -> Repository:
     row = (
-        await db.execute(select(Repository).where(Repository.github_id == github_id))
+        await db.execute(select(Repository).where(Repository.github_repo_id == github_repo_id))
     ).scalar_one_or_none()
 
     if row is None:
         row = Repository(
-            github_id=github_id,
+            github_repo_id=github_repo_id,
+            owner=owner,
+            name=name,
             full_name=full_name,
             default_branch=default_branch,
+            private=private,
             installation_id=installation_id,
         )
         db.add(row)
     else:
+        row.owner = owner
+        row.name = name
         row.full_name = full_name
-        row.default_branch = default_branch
+        row.private = private
+        if default_branch is not None:
+            row.default_branch = default_branch
         if installation_id is not None:
             row.installation_id = installation_id
 
@@ -46,7 +58,7 @@ async def upsert_repository(
 async def upsert_pull_request(
     db: AsyncSession,
     *,
-    repository_id: int,
+    repository_id: uuid.UUID,
     number: int,
     title: str,
     state: str,

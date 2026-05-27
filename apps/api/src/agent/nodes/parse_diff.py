@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from src.agent.state import ReviewState
-from src.github.client import GitHubClient
-from src.github.diff_parser import parse_unified_diff
+from src.integrations.github.client import GitHubClient
+from src.integrations.github.diff_parser import parse_unified_diff
 from src.observability.logging import get_logger
 
 log = get_logger(__name__)

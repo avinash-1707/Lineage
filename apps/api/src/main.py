@@ -6,8 +6,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 
-from src.api import analytics, repositories, reviews, stream
+from src.api import analytics, auth, repositories, reviews, stream
 from src.config import get_settings
+from src.core.redis import close_redis
 from src.observability.logging import configure_logging, get_logger
 from src.observability.metrics import metrics_router
 from src.webhooks.router import router as webhooks_router
@@ -20,8 +21,11 @@ log = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     log.info("api.startup", env=settings.environment)
-    yield
-    log.info("api.shutdown")
+    try:
+        yield
+    finally:
+        await close_redis()
+        log.info("api.shutdown")
 
 
 app = FastAPI(
@@ -33,7 +37,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[settings.frontend_origin],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -49,6 +54,7 @@ async def readyz() -> dict[str, str]:
     return {"status": "ready"}
 
 
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(webhooks_router, prefix="/webhooks", tags=["webhooks"])
 app.include_router(reviews.router, prefix="/api/reviews", tags=["reviews"])
 app.include_router(repositories.router, prefix="/api/repositories", tags=["repositories"])
