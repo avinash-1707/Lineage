@@ -4,10 +4,13 @@ services:
       context: ../apps/web
       dockerfile: Dockerfile
       target: builder
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
     command: ["pnpm", "dev"]
     environment:
       NODE_ENV: development
       NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_API_URL: http://localhost:8000
     volumes:
       - ../apps/web:/app
       - /app/node_modules
@@ -16,7 +19,26 @@ services:
   api:
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     environment:
+      ENVIRONMENT: dev
       LOG_LEVEL: debug
+      COOKIE_SECURE: "false"
+      COOKIE_SAMESITE: lax
+      FRONTEND_ORIGIN: http://localhost:3000
+    volumes:
+      - ../apps/api/src:/app/src
+      - ../apps/api/alembic:/app/alembic
+
+  worker:
+    command: ["celery", "-A", "src.workers.celery_app", "worker", "-l", "debug"]
+    environment:
+      ENVIRONMENT: dev
+      LOG_LEVEL: debug
+    volumes:
+      - ../apps/api/src:/app/src
+
+  migrate:
+    environment:
+      ENVIRONMENT: dev
     volumes:
       - ../apps/api/src:/app/src
       - ../apps/api/alembic:/app/alembic

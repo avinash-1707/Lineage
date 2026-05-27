@@ -1,14 +1,30 @@
 name: lineage
 
+x-api-env: &api-env
+  ENVIRONMENT: ${ENVIRONMENT:-dev}
+  DATABASE_URL: postgresql+asyncpg://lineage:lineage@postgres:5432/lineage
+  REDIS_URL: redis://redis:6379/0
+  CELERY_BROKER_URL: redis://redis:6379/1
+  CELERY_RESULT_BACKEND: redis://redis:6379/2
+  QDRANT_URL: http://qdrant:6333
+  FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
+
+x-api-env-file: &api-env-file
+  env_file:
+    - path: ../apps/api/.env
+      required: false
+
 services:
   web:
     build:
       context: ../apps/web
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
     image: lineage/web:latest
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: http://api:8000
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
     ports:
       - "3000:3000"
     depends_on:
@@ -16,17 +32,28 @@ services:
         condition: service_started
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    image: lineage/api:latest
+    <<: *api-env-file
+    environment:
+      <<: *api-env
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
   api:
     build:
       context: ../apps/api
       dockerfile: Dockerfile
     image: lineage/api:latest
+    <<: *api-env-file
     environment:
-      DATABASE_URL: postgresql+asyncpg://lineage:lineage@postgres:5432/lineage
-      REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/2
-      QDRANT_URL: http://qdrant:6333
+      <<: *api-env
     ports:
       - "8000:8000"
     depends_on:
@@ -36,6 +63,25 @@ services:
         condition: service_healthy
       qdrant:
         condition: service_started
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  worker:
+    image: lineage/api:latest
+    <<: *api-env-file
+    environment:
+      <<: *api-env
+    command: ["celery", "-A", "src.workers.celery_app", "worker", "-l", "info"]
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   postgres:
