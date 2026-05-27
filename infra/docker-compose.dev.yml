@@ -6,11 +6,13 @@ services:
       target: builder
       args:
         NEXT_PUBLIC_API_URL: http://localhost:8000
+        NEXT_PUBLIC_GITHUB_APP_SLUG: ${NEXT_PUBLIC_GITHUB_APP_SLUG}
     command: ["pnpm", "dev"]
     environment:
       NODE_ENV: development
       NEXT_TELEMETRY_DISABLED: "1"
       NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_GITHUB_APP_SLUG: ${NEXT_PUBLIC_GITHUB_APP_SLUG}
     volumes:
       - ../apps/web:/app
       - /app/node_modules
@@ -27,6 +29,7 @@ services:
     volumes:
       - ../apps/api/src:/app/src
       - ../apps/api/alembic:/app/alembic
+      - ../apps/api/secrets:/run/secrets:ro
 
   worker:
     command: ["celery", "-A", "src.workers.celery_app", "worker", "-l", "debug"]
@@ -35,6 +38,7 @@ services:
       LOG_LEVEL: debug
     volumes:
       - ../apps/api/src:/app/src
+      - ../apps/api/secrets:/run/secrets:ro
 
   migrate:
     environment:
@@ -42,3 +46,18 @@ services:
     volumes:
       - ../apps/api/src:/app/src
       - ../apps/api/alembic:/app/alembic
+      - ../apps/api/secrets:/run/secrets:ro
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    command:
+      - "http"
+      - "--url=${NGROK_DOMAIN}"
+      - "api:8000"
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    ports:
+      - "4040:4040"
+    depends_on:
+      - api
+    restart: unless-stopped

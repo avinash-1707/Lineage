@@ -30,6 +30,8 @@ htmlcov/
 .env
 .env.*
 !.env.example
+secrets/
+*.pem
 
 # Logs
 *.log

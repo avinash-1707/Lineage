@@ -84,7 +84,7 @@ export function DashboardClient() {
 
         <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-line-soft pt-6">
           <a
-            href="https://github.com/apps"
+            href={githubAppInstallUrl()}
             target="_blank"
             rel="noreferrer noopener"
             className="btn btn-ghost text-[0.88rem]"
@@ -154,4 +154,11 @@ function DashboardSkeleton() {
 function firstName(name: string | null, email: string): string {
   if (name) return name.split(" ")[0];
   return email.split("@")[0];
+}
+
+function githubAppInstallUrl(): string {
+  const slug = process.env.NEXT_PUBLIC_GITHUB_APP_SLUG;
+  return slug
+    ? `https://github.com/apps/${slug}/installations/new`
+    : "https://github.com/apps";
 }
