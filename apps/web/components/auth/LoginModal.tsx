@@ -22,8 +22,12 @@ export function LoginModal({ open, onOpenChange }: Props) {
   const reduce = reduceMaybe === true;
   const [redirecting, setRedirecting] = useState(false);
 
-  const initialPanel = reduce ? { opacity: 0 } : { opacity: 0, y: 16, rotateX: -2 };
-  const animatePanel = reduce ? { opacity: 1 } : { opacity: 1, y: 0, rotateX: 0 };
+  const initialPanel = reduce
+    ? { opacity: 0 }
+    : { opacity: 0, y: 16, rotateX: -2 };
+  const animatePanel = reduce
+    ? { opacity: 1 }
+    : { opacity: 1, y: 0, rotateX: 0 };
   const exitPanel = reduce ? { opacity: 0 } : { opacity: 0, y: 8 };
 
   const fadeUp = (delay: number) =>
@@ -63,7 +67,7 @@ export function LoginModal({ open, onOpenChange }: Props) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.32, ease: EASE_PAPER }}
-                className="fixed inset-0 z-[80] bg-contrast-bg/80 backdrop-blur-[3px]"
+                className="fixed inset-0 z-80 bg-contrast-bg/80 backdrop-blur-[3px]"
               />
             </Dialog.Overlay>
 
@@ -87,7 +91,7 @@ export function LoginModal({ open, onOpenChange }: Props) {
                 }}
                 style={{ transformOrigin: "top center" }}
                 className={[
-                  "fixed z-[90]",
+                  "fixed z-90",
                   "inset-x-3 bottom-3 sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2",
                   "w-auto sm:w-[min(92vw,560px)]",
                   "overflow-hidden",
@@ -98,7 +102,10 @@ export function LoginModal({ open, onOpenChange }: Props) {
                 ].join(" ")}
               >
                 {/* atmospheric warmth — radial breathing behind glyph */}
-                <div aria-hidden className="paper-warmth pointer-events-none absolute inset-0" />
+                <div
+                  aria-hidden
+                  className="paper-warmth pointer-events-none absolute inset-0"
+                />
 
                 {/* illuminated capital L — bleeds off top-left */}
                 <motion.span
@@ -111,7 +118,10 @@ export function LoginModal({ open, onOpenChange }: Props) {
                     delay: reduce ? 0 : 0.24,
                   }}
                   className="pointer-events-none absolute -left-4 -top-10 select-none font-display italic leading-none text-highlight sm:-left-3 sm:-top-14"
-                  style={{ fontSize: "clamp(10rem, 28vw, 17rem)", fontWeight: 420 }}
+                  style={{
+                    fontSize: "clamp(10rem, 28vw, 17rem)",
+                    fontWeight: 420,
+                  }}
                 >
                   L
                 </motion.span>
@@ -135,7 +145,7 @@ export function LoginModal({ open, onOpenChange }: Props) {
                   </svg>
                 </Dialog.Close>
 
-                <div className="relative z-[1] flex flex-col gap-7 px-6 pb-7 pt-12 sm:px-10 sm:pb-10 sm:pt-14">
+                <div className="relative z-1 flex flex-col gap-7 px-6 pb-7 pt-12 sm:px-10 sm:pb-10 sm:pt-14">
                   {/* header group (A) */}
                   <div className="flex flex-col gap-4">
                     <motion.span
@@ -148,7 +158,7 @@ export function LoginModal({ open, onOpenChange }: Props) {
                     <Dialog.Title asChild>
                       <motion.h2
                         {...fadeUp(0.05)}
-                        className="max-w-[18ch] font-display text-[clamp(2rem,4.6vw,2.65rem)] italic leading-[1.02] tracking-[-0.025em] text-ink"
+                        className="max-w-[18ch] font-display text-[clamp(2rem,4.6vw,2.65rem)] italic leading-[1.02] tracking-tight text-ink"
                       >
                         Continue the lineage.
                       </motion.h2>
@@ -159,7 +169,8 @@ export function LoginModal({ open, onOpenChange }: Props) {
                         {...fadeUp(0.1)}
                         className="max-w-[40ch] text-[0.95rem] leading-[1.55] text-ink-soft"
                       >
-                        Sign in to pick up where your team&apos;s reviews left off.
+                        Sign in to pick up where your team&apos;s reviews left
+                        off.
                       </motion.p>
                     </Dialog.Description>
                   </div>
@@ -175,7 +186,9 @@ export function LoginModal({ open, onOpenChange }: Props) {
                       onClick={() => setRedirecting(true)}
                       data-redirecting={redirecting ? "true" : "false"}
                       aria-disabled={redirecting}
-                      aria-label={redirecting ? "Redirecting to GitHub" : undefined}
+                      aria-label={
+                        redirecting ? "Redirecting to GitHub" : undefined
+                      }
                       className="github-cta group flex w-full items-center justify-center gap-3 rounded-full border border-line bg-contrast-bg px-6 py-3.5 text-[0.95rem] font-medium text-contrast-fg hover:bg-[#0f0d0a] hover:tracking-[-0.005em] focus-visible:outline-none active:translate-y-px aria-disabled:cursor-progress aria-disabled:opacity-90"
                     >
                       {redirecting ? (
@@ -183,7 +196,9 @@ export function LoginModal({ open, onOpenChange }: Props) {
                       ) : (
                         <>
                           <GithubMark size={18} className="text-contrast-fg" />
-                          <span className="github-cta-label">Continue with GitHub</span>
+                          <span className="github-cta-label">
+                            Continue with GitHub
+                          </span>
                           <span
                             aria-hidden
                             className="github-cta-arrow inline-block transition-transform duration-300 ease-out group-hover:translate-x-1"
@@ -218,11 +233,17 @@ export function LoginModal({ open, onOpenChange }: Props) {
                   >
                     <span>Lineage</span>
                     <span className="flex items-center gap-3">
-                      <a href="/terms" className="transition-colors hover:text-ink-soft">
+                      <a
+                        href="/terms"
+                        className="transition-colors hover:text-ink-soft"
+                      >
                         Terms
                       </a>
                       <span aria-hidden>·</span>
-                      <a href="/privacy" className="transition-colors hover:text-ink-soft">
+                      <a
+                        href="/privacy"
+                        className="transition-colors hover:text-ink-soft"
+                      >
                         Privacy
                       </a>
                     </span>

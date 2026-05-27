@@ -1,7 +1,7 @@
 import { DashboardClient } from "./DashboardClient";
 
 export const metadata = {
-  title: "Dashboard · Lineage",
+  title: "Overview",
 };
 
 export default function DashboardPage() {
