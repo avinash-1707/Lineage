@@ -1,7 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+import { useAuthModal } from "@/components/auth/AuthModalProvider";
+import { useUser } from "@/hooks/useUser";
 import { LogoMark } from "./LogoMark";
 
 const links = [
@@ -12,6 +16,8 @@ const links = [
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const { isAuthenticated, isLoading, user } = useUser();
+  const { open } = useAuthModal();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -19,6 +25,10 @@ export function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const ctaSizeClasses = scrolled
+    ? "px-4 py-2 text-[0.82rem]"
+    : "px-5 py-2.5 text-[0.88rem]";
 
   return (
     <header
@@ -81,22 +91,58 @@ export function Nav() {
           ))}
         </ul>
 
-        <Link
-          href="#cta"
+        <div
           style={{ ["--d" as string]: "440ms" }}
-          className={[
-            "btn btn-primary nav-anim-pop",
-            "transition-[padding,font-size] duration-600",
-            scrolled
-              ? "px-4 py-2 text-[0.82rem]"
-              : "px-5 py-2.5 text-[0.88rem]",
-          ].join(" ")}
+          className="nav-anim-pop flex items-center gap-2"
         >
-          <span>Get access</span>
-          <span aria-hidden className="arrow">
-            →
-          </span>
-        </Link>
+          {isLoading ? (
+            <div
+              aria-hidden
+              className={[
+                "rounded-full border border-line bg-paper/50",
+                scrolled ? "h-8 w-[120px]" : "h-9 w-[140px]",
+              ].join(" ")}
+            />
+          ) : isAuthenticated ? (
+            <Link
+              href="/dashboard"
+              className={[
+                "btn btn-primary transition-[padding,font-size] duration-600",
+                ctaSizeClasses,
+              ].join(" ")}
+            >
+              {user?.avatar_url ? (
+                <Image
+                  src={user.avatar_url}
+                  alt=""
+                  aria-hidden
+                  width={20}
+                  height={20}
+                  unoptimized
+                  className="h-5 w-5 rounded-full border border-contrast-fg/15"
+                />
+              ) : null}
+              <span>Dashboard</span>
+              <span aria-hidden className="arrow">
+                →
+              </span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={open}
+              className={[
+                "btn btn-primary transition-[padding,font-size] duration-600",
+                ctaSizeClasses,
+              ].join(" ")}
+            >
+              <span>Get started</span>
+              <span aria-hidden className="arrow">
+                →
+              </span>
+            </button>
+          )}
+        </div>
       </nav>
     </header>
   );

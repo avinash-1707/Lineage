@@ -1,7 +1,15 @@
+"use client";
+
 import Link from "next/link";
+
+import { useAuthModal } from "@/components/auth/AuthModalProvider";
+import { useUser } from "@/hooks/useUser";
 import { ShaderBackdrop } from "./ShaderBackdrop";
 
 export function Hero() {
+  const { open } = useAuthModal();
+  const { isAuthenticated } = useUser();
+
   return (
     <section className="relative z-10 isolate min-h-screen overflow-hidden">
       <ShaderBackdrop />
@@ -33,12 +41,25 @@ export function Hero() {
         </p>
 
         <div className="reveal mt-10" style={{ ["--d" as string]: "620ms" }}>
-          <Link href="#cta" className="btn btn-primary text-[0.95rem]">
-            Request access
-            <span aria-hidden className="arrow">
-              →
-            </span>
-          </Link>
+          {isAuthenticated ? (
+            <Link href="/dashboard" className="btn btn-primary text-[0.95rem]">
+              Open dashboard
+              <span aria-hidden className="arrow">
+                →
+              </span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={open}
+              className="btn btn-primary text-[0.95rem]"
+            >
+              Request access
+              <span aria-hidden className="arrow">
+                →
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </section>

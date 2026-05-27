@@ -74,7 +74,7 @@ class Settings(BaseSettings):
     access_cookie_name: str = "access_token"
     refresh_cookie_name: str = "refresh_token"
     frontend_origin: str = "http://localhost:3000"
-    post_login_redirect_path: str = "/"
+    post_login_redirect_path: str = "/dashboard"
 
     # --- cache ttls ---
     install_token_cache_ttl_seconds: int = 55 * 60

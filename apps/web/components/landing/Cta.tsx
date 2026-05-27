@@ -1,8 +1,15 @@
 "use client";
 
+import Link from "next/link";
+
+import { useAuthModal } from "@/components/auth/AuthModalProvider";
+import { useUser } from "@/hooks/useUser";
 import { Reveal } from "./Reveal";
 
 export function Cta() {
+  const { open } = useAuthModal();
+  const { isAuthenticated } = useUser();
+
   return (
     <section
       id="cta"
@@ -32,38 +39,40 @@ export function Cta() {
 
           <p className="mt-8 max-w-[52ch] text-[1.05rem] leading-[1.55] text-contrast-fg/75">
             Lineage is in private beta with a small group of engineering teams.
-            Add your repository to the waitlist and we will reach out as slots
-            open through the quarter.
+            Sign in with GitHub and we will reach out as installation slots open
+            through the quarter.
           </p>
 
-          <form
-            action="#"
-            method="post"
-            className="mt-10 flex w-full max-w-[520px] flex-col items-stretch gap-3 sm:flex-row"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <label className="sr-only" htmlFor="email">
-              Work email
-            </label>
-            <input
-              id="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              required
-              placeholder="you@team.dev"
-              className="flex-1 rounded-full border border-contrast-fg/15 bg-contrast-fg/4 px-5 py-3 text-[0.95rem] text-contrast-fg placeholder:text-contrast-fg/40 outline-none transition-colors duration-300 focus:border-contrast-fg/40 focus:bg-contrast-fg/10"
-            />
-            <button
-              type="submit"
-              className="btn rounded-full bg-ink px-5 py-3 text-[0.92rem] font-medium text-contrast-bg hover:bg-highlight"
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            {isAuthenticated ? (
+              <Link
+                href="/dashboard"
+                className="btn rounded-full bg-ink px-5 py-3 text-[0.92rem] font-medium text-contrast-bg hover:bg-highlight"
+              >
+                Open dashboard
+                <span aria-hidden className="arrow">
+                  →
+                </span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={open}
+                className="btn rounded-full bg-ink px-5 py-3 text-[0.92rem] font-medium text-contrast-bg hover:bg-highlight"
+              >
+                Continue with GitHub
+                <span aria-hidden className="arrow">
+                  →
+                </span>
+              </button>
+            )}
+            <a
+              href="#features"
+              className="btn rounded-full border border-contrast-fg/15 px-5 py-3 text-[0.92rem] font-medium text-contrast-fg/85 hover:border-contrast-fg/35 hover:text-contrast-fg"
             >
-              Request access
-              <span aria-hidden className="arrow">
-                →
-              </span>
-            </button>
-          </form>
+              See how it works
+            </a>
+          </div>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.2em] text-contrast-fg/55">
             <span>No card required.</span>

@@ -3,6 +3,8 @@ import { Fraunces, Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { SmoothScroll } from "@/components/landing/SmoothScroll";
+import { QueryProvider } from "@/components/providers/QueryProvider";
+import { AuthModalProvider } from "@/components/auth/AuthModalProvider";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -40,8 +42,12 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", fraunces.variable, geist.variable, geistMono.variable, "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col bg-bg text-ink">
-        <SmoothScroll />
-        {children}
+        <QueryProvider>
+          <AuthModalProvider>
+            <SmoothScroll />
+            {children}
+          </AuthModalProvider>
+        </QueryProvider>
       </body>
     </html>
   );

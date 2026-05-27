@@ -398,3 +398,52 @@ html.lenis, html.lenis body { height: auto; }
     @apply font-sans;
   }
 }
+
+/* ---- login modal ---- */
+.paper-warmth {
+  background:
+    radial-gradient(
+      420px circle at 22% 26%,
+      color-mix(in oklab, var(--highlight) 8%, transparent) 0%,
+      transparent 65%
+    );
+  animation: paper-breathe 9s var(--ease-in-out-soft) infinite alternate;
+}
+
+@keyframes paper-breathe {
+  from { background-position: 0% 0%; }
+  to   { background-position: 6% -4%; }
+}
+
+.github-cta {
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 150ms ease-out,
+    background-color 150ms ease-out,
+    box-shadow 150ms ease-out,
+    letter-spacing 150ms ease-out;
+}
+.github-cta:active {
+  box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.5);
+}
+.github-cta:focus-visible {
+  box-shadow:
+    0 0 0 1px var(--paper),
+    0 0 0 4px color-mix(in oklab, var(--accent) 35%, transparent),
+    0 8px 24px -10px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 150ms ease-out,
+    background-color 150ms ease-out,
+    box-shadow 140ms ease-out,
+    letter-spacing 150ms ease-out;
+}
+
+.github-cta[data-redirecting="true"] .github-cta-label {
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-warmth { animation: none; }
+  .github-cta-arrow,
+  .github-cta { transition-duration: 0ms; }
+}
