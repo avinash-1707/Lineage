@@ -442,8 +442,35 @@ html.lenis, html.lenis body { height: auto; }
   opacity: 0.85;
 }
 
+.gh-loader {
+  --s: 22px;
+  display: inline-block;
+  width: calc(var(--s) * 2);
+  height: var(--s);
+  --_g: currentColor 90%, transparent;
+  background:
+    radial-gradient(farthest-side at bottom, var(--_g)) 0    calc(50% - var(--s)/16),
+    radial-gradient(farthest-side at top,    var(--_g)) 0    calc(50% + var(--s)/16),
+    radial-gradient(farthest-side at bottom, var(--_g)) 50%  calc(50% - var(--s)/16),
+    radial-gradient(farthest-side at top,    var(--_g)) 50%  calc(50% + var(--s)/16),
+    radial-gradient(farthest-side at bottom, var(--_g)) 100% calc(50% - var(--s)/16),
+    radial-gradient(farthest-side at top,    var(--_g)) 100% calc(50% + var(--s)/16);
+  background-size: 25% 25%;
+  background-repeat: no-repeat;
+  animation: gh-loader 1s infinite linear;
+}
+
+@keyframes gh-loader {
+  16.67% { background-position: 0 0, 0 100%, 50% calc(50% - var(--s)/8), 50% calc(50% + var(--s)/16), 100% calc(50% - var(--s)/16), 100% calc(50% + var(--s)/16); }
+  33.33% { background-position: 0 0, 0 100%, 50% 0, 50% 100%, 100% calc(50% - var(--s)/16), 100% calc(50% + var(--s)/16); }
+  50%    { background-position: 0 0, 0 100%, 50% 0, 50% 100%, 100% 0, 100% 100%; }
+  66.67% { background-position: 0 calc(50% - var(--s)/16), 0 calc(50% + var(--s)/16), 50% 0, 50% 100%, 100% 0, 100% 100%; }
+  83.33% { background-position: 0 calc(50% - var(--s)/16), 0 calc(50% + var(--s)/16), 50% calc(50% - var(--s)/16), 50% calc(50% + var(--s)/16), 100% 0, 100% 100%; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .paper-warmth { animation: none; }
   .github-cta-arrow,
   .github-cta { transition-duration: 0ms; }
+  .gh-loader { animation-duration: 2s; }
 }

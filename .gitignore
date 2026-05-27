@@ -45,6 +45,7 @@ pnpm-debug.log*
 Thumbs.db
 
 # Misc
+context/
 *.swp
 *.swo
 coverage/

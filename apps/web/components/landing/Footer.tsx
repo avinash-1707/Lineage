@@ -22,7 +22,7 @@ const cols = [
   {
     head: "Company",
     items: [
-      { label: "About", href: "#" },
+      { label: "About", href: "/about" },
       { label: "Careers", href: "#" },
       { label: "Contact", href: "#" },
     ],

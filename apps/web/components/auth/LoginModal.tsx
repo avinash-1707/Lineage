@@ -175,20 +175,23 @@ export function LoginModal({ open, onOpenChange }: Props) {
                       onClick={() => setRedirecting(true)}
                       data-redirecting={redirecting ? "true" : "false"}
                       aria-disabled={redirecting}
+                      aria-label={redirecting ? "Redirecting to GitHub" : undefined}
                       className="github-cta group flex w-full items-center justify-center gap-3 rounded-full border border-line bg-contrast-bg px-6 py-3.5 text-[0.95rem] font-medium text-contrast-fg hover:bg-[#0f0d0a] hover:tracking-[-0.005em] focus-visible:outline-none active:translate-y-px aria-disabled:cursor-progress aria-disabled:opacity-90"
                     >
-                      <GithubMark size={18} className="text-contrast-fg" />
-                      <span className="github-cta-label">
-                        {redirecting ? "Redirecting…" : "Continue with GitHub"}
-                      </span>
-                      {!redirecting ? (
-                        <span
-                          aria-hidden
-                          className="github-cta-arrow inline-block transition-transform duration-300 ease-out group-hover:translate-x-1"
-                        >
-                          →
-                        </span>
-                      ) : null}
+                      {redirecting ? (
+                        <span className="gh-loader" aria-hidden />
+                      ) : (
+                        <>
+                          <GithubMark size={18} className="text-contrast-fg" />
+                          <span className="github-cta-label">Continue with GitHub</span>
+                          <span
+                            aria-hidden
+                            className="github-cta-arrow inline-block transition-transform duration-300 ease-out group-hover:translate-x-1"
+                          >
+                            →
+                          </span>
+                        </>
+                      )}
                     </a>
 
                     <div className="flex flex-wrap items-center gap-2">
